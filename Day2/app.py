@@ -53,3 +53,4 @@ def index():
     daily_toon_data[day] = parse_daum_webtoon_data(data)
     return daily_toon_data
 
+

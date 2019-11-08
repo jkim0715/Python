@@ -7,4 +7,6 @@ def request_data_from_url(url)
     data = response.json
     return data
 def parse_naver_map_route(data)
-    gil = []    
+    gil = [] 
+    
+

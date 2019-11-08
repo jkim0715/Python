@@ -1,3 +1,5 @@
+import random
+
 #dictionary 
 #key:value
 student_phone_number = {
@@ -29,14 +31,17 @@ lunch_menu["경성불백"] = {
     "한식메뉴" : "석쇠불고기",
     "특식메뉴" : "돈까스" 
 }
-# print(lunch_menu)
-# ## 주의!
-# lunch_menu["양자강"] = "짜장면"
-# ## 이렇게 Key 값이 같은걸 추가하면 마지막으로 추가된 value로 Replace됨
-# print("-------------------------------------------------------")
-# print(lunch_menu)
 
-# 1. 모든 키값 뽑기
+'''
+print(lunch_menu)
+## 주의!
+lunch_menu["양자강"] = "짜장면"
+## 이렇게 Key 값이 같은걸 추가하면 마지막으로 추가된 value로 Replace됨
+print("-------------------------------------------------------")
+print(lunch_menu)
+'''
+
+# 1. 모든 키값 뽑기 배열로 리턴됨.
 lunch_menu.keys()
 # 2. 모든 value 값 뽑기
 lunch_menu.values()
@@ -49,3 +54,21 @@ for key in lunch_menu.keys():
     print(key)
 for key, value in lunch_menu.items():
     print(key, value)
+
+#random활용
+#choice 는 한개
+#sample 은 여러개
+#lunch_menu.keys() 이거 타입이 dics_keys로 되어있어서 바꿔줘야됨.
+print(random.choice(list(lunch_menu.keys())))
+print(random.sample( list(lunch_menu.keys()), 2))
+
+##조건문
+if 조건1:
+    #조건1 실행문
+elif 조건2:
+    #조건2 실행문
+else:
+    #나머지 실행문
+
+##함수 만드는 방법
+def 함수명(파라미터):    

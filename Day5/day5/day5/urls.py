@@ -16,12 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from lotto import views
-
-
+from lotto import views as lotto_views
+from ascii import views as ascii_views
+from opgg import views as opgg_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lotto/', views.lotto),
-    path('lotto/winning', views.winning)
+    path('lotto/', lotto_views.lotto),
+    path('lotto/winning', lotto_views.winning),
+    path('ascii/', ascii_views.ascii),
+    path('ascii/result', ascii_views.result),
+    path('opgg/', opgg_views.opgg),
+    path('opgg/result', opgg_views.result)
 ]

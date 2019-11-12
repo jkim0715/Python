@@ -62,8 +62,8 @@ def fake_naver_search():
 #5. fake login
 @app.route('/login')
 def fake_login_form():
-    #아이디 입력창, 패스워드 입력창, 로그인 버튼
     return render_template('login.html')
+    #아이디 입력창, 패스워드 입력창, 로그인 버튼
 
 @app.route('/login/submit' , methods=['POST'])
 def fake_login_submit():

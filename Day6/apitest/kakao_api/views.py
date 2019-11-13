@@ -10,7 +10,7 @@ def main(request):
 
 def find_address(request):
     url = 'https://dapi.kakao.com/v2/local/search/address.json'
-    key = '4862a44aeb421af553d72f18cf774b34'
+    key = ''
     q = request.GET['address']
    
     params ={
@@ -44,7 +44,7 @@ def keyword_result(request):
     gps_y = position.split(',')[1]
 
     url ='https://dapi.kakao.com/v2/local/search/keyword.json'
-    key = '4862a44aeb421af553d72f18cf774b34'
+    key = ''
     params = {
         'query' :keyword,
         'x': gps_x,

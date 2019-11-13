@@ -25,7 +25,7 @@
 
 ## [Day4](/Day4)
 - app.py
-
+    - webtoon
 ## Day5
 - Django<br>
 - 로또번호 생성기 + 번호체크 + 번호<br>
@@ -33,7 +33,5 @@
 - OPGG <br>
 
 ## Day6
-
 - 카카오 API 활용<br>
-- NAVER API 활용<br>
-
+[To Lecture](https://github.com/jkim0715/TIL/tree/master/Python)

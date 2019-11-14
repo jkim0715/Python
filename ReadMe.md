@@ -35,3 +35,7 @@
 ## Day6
 - 카카오 API 활용<br>
 [To Lecture](https://github.com/jkim0715/TIL/tree/master/Python)
+
+## Day7
+- Naver API 활용<br>
+- ORM Intro

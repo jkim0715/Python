@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="alert alert-primary" role="alert">
+    제목 : {{board.title}}
+</div>
+<div class="alert alert-primary" role="alert">
+    내용: {{board.contents}}
+</div>
+<div class="alert alert-primary" role="alert">
+    작성자: {{board.creator}}
+</div>
+<div class ="mt-3 text-center">
+    <a href = "/boards/{{board.id}}/edit" class="btn btn-danger">수정하기</a>
+    <a href = "/boards/{{board.id}}/delete" class="btn btn-warning text-white">삭제하기</a>
+</div>
+{%endblock %}

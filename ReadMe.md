@@ -39,3 +39,8 @@
 ## Day7
 - Naver API 활용<br>
 - ORM Intro
+
+## Day8
+- CRUD 연습. + Bootstrap
+- 기본 게시판 만들기
+    - CRUD 

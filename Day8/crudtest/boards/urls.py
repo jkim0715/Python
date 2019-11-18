@@ -8,6 +8,7 @@ urlpatterns = [
     path('new/',boards_views.new),
     path('create/',boards_views.create),
     #게시판의 글 상세보기
+    ##<id> 값을 받을 때 Int형으로 받아옴.
     path('<int:id>/',boards_views.show),
     path('<int:id>/edit/',boards_views.edit),
     path('<int:id>/update/',boards_views.update),

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<div class="container">
+    <div class="card">
+        <form action="{% url 'jae:articles' %}" method='POST'>
+            <input type="text" name=csrfmiddlewaretoken value="{{csrf_token}}" hidden>
+            <div class="card-body">
+                <textarea class="form-control" rows="5" name='contents'>내용</textarea>
+            </div>
+            <div class="card-footer text-right">
+                <input type="submit" class="btn btn-success" value="작성하기">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container">
+    {%for article in articles%}
+    <div class="mt-4">
+        <div class="card col-12">
+            <img src="" class="card-img-top" alt="">
+            <div class="card-body" style="min-height: 9rem;">
+                <p class="card-text">{{article.contents}}</p>
+                <span class ="float-right">
+                        <a href="{% url 'jae:edit' article.id %}" class="btn btn-warning"><i class="far fa-edit"></i>게시글 수정</a>
+                        <a href="{% url 'jae:delete' article.id%}" class="btn btn-danger"><i class="far fa-trash-alt"></i>게시글 삭제</a>
+                </span>
+            </div>
+            
+          
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <form action="{% url 'jae:comments' %}" method="POST">
+                        <input type="hidden" name=csrfmiddlewaretoken value="{{csrf_token}}">
+                        <input type="hidden" name="article_id" value="{{article.id}}">
+                        <div class="row">
+                            <div class="col-9">
+                                <input type="text" class="form-control" name="contents">
+                            </div>
+                            <div class="col-3 text-center">
+                                <input type="submit" class="btn btn-primary" value="작성">
+                            </div>
+                        </div>
+                    </form>
+                </li>
+                {% for comment in article.comments %}
+                <li class="list-group-item">
+                    <i class="fas fa-comment-dots">{{comment.contents}}</i>
+                    <span class="float-right">
+                        <a href="{% url 'jae:edit_comment' comment.id%}" class="btn btn-warning"><i class="far fa-edit"></i>수정</a>
+                        <a href="{% url 'jae:delete_comment' comment.id %}" class="btn btn-danger"><i class="far fa-trash-alt"></i>삭제</a>
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {%endfor%}
+</div>
+{% endblock %}

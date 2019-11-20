@@ -41,6 +41,20 @@
 - ORM Intro
 
 ## Day8
-- CRUD 연습. + Bootstrap
+- CRUD 연습. + Bootstrap<br>
 - 기본 게시판 만들기
     - CRUD 
+
+## Day9
+- crudtest
+    - articles
+    - crudtest
+## Day10
+- crudtest
+    - boards
+    - crudtest
+
+## Day11
+- instagram
+    - article
+        - comment

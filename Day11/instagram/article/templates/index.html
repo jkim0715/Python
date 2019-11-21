@@ -41,7 +41,7 @@
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         {%for image in article.article_images%}
-                      <div class="carousel-item {% if image.id is 1 %} active {%endif%}">
+                      <div class="carousel-item {%if image.image_thumbnail.url == article.article_images.first.image_thumbnail.url%}active{% endif %}">
                         <img src="{{image.image_thumbnail.url}}" class="d-block w-100" alt="...">
                       </div>
                         {% endfor %}

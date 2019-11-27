@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</html>
+</head>
+
+<body>
+    <form class="mb-5 mt-5" id='boardForm'>
+        댓글쓰기
+        <input type="text" class="form-control" id="boardInput">
+        <button type="submit" class="btn btn-primary" id="submitComment">확인</button>
+    </form>
+    <div class="commentList">
+        <ul class="list-group">
+            {%for board in boards %}
+            <li class="list-group-item" id="board-{{board.id}}">
+                <span class="boardItem" >{{board.contents}}</span>
+                <span class="float-right">
+                    <button type="button" class="btn btn-danger deleteBoard" data-value="{{board.id}}">삭제</button>
+                    <button type="button" class="btn btn-warning editBoard" data-id="{{board.id}}">수정</button>
+                </span>
+            </li>
+            {%endfor%}
+        </ul>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            // 수정 버튼을 눌렀을 때 실제 DB에서 Update 
+            $(document).on('click','.editBoard', function(){
+                var id = $(this).data('id');
+                // console.dir($('#board-'+id+' .boardItem').text());
+                var contents =$('#board-'+id+' .boardItem').text();
+                $('#boardInput').val(contents);
+                $('#submitComment').data('method','edit');
+                $('#submitComment').data('id',id);
+                console.log($('#submitComment').data());
+            })
+
+            //삭제 버튼 눌렀을 때 실제 DB에서 삭제 시키기
+            //삭제 버튼을 눌렀을 때 
+            $(document).on('click','.deleteBoard', function () {
+                //해당 줄(list)를 하나만 삭제해야 함.
+                var id = $(this).data('value');
+                $.ajax({
+                    url: '{% url "jae:delete_boards" %}',
+                    method: 'POST',
+                    data: {
+                        board_id: id,
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    },
+                    success: function (data) {
+                        alert('삭제성공');
+                        $('#board-' + data.board_id).hide();
+                    },
+                    error: function (data) {
+                        alert('삭제실패');
+                    }
+                })
+               
+            })
+
+
+            // 댓글 쓰고 실제로 DB 등록하기 
+            //boardForm이 제출 되었을 때  // e 혹은 event 암거나 쓰기
+            $('#boardForm').on('submit', function (e) {
+                event.preventDefault(); //submit 됐을 때 보통 페이지가 바뀌는데 , 이걸 넣어두면 submit을 눌러도 바로 제출되지 않음.
+                //실제 DB에 등록이 될 수 있게끔 Ajax 요청 만들어 줌 
+                var board = $('#boardInput').val();
+                $('#boardInput').val(' ');
+                if($('#submitComment').data('method')=='edit'){
+                    var id = $('#submitComment').data('id');
+                    $.ajax({
+                        url: '{% url "jae:edit_boards" %}',
+                        method : 'POST',
+                        data : {
+                            board_id:id,
+                            contents:board,
+                            csrfmiddlewaretoken: "{{csrf_token}}"
+                        },
+                        success : function(data){
+                    
+                            $('#board-'+id+' .boardItem').text(board);
+                            $('#submitComment').removeData('method');
+                        },
+                        error: function(data){
+
+                        }
+                    })
+                }else{
+                    $.ajax({
+                    url: '{% url "jae:submit_boards" %}',
+                    method: 'POST',
+                    data: {
+                        board: board,
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    },
+                    success: function (data) {
+                        alert('성공');
+                        $('.list-group').prepend(data);
+
+                    },
+                    error: function (data) {
+                        alert('실패 ');
+                    }
+                })
+                }
+     
+
+            })
+            // 댓글달기
+            // 댓글쓰기 버튼이 눌렸을때,
+
+            // $('#submitComment').click(function() {
+            // 성능차이도 크지 않고 나중에 밑에 형식으로 쓰느게 많기 떄문에..아래 형태에 익숙해 져야 함.
+            // $('#submitComment').on('click', function () {
+            //     var input = $('#commentForm').val();
+            //     if (input == '') {
+            //         alert("댓글을 입력해주세요");
+            //         return;
+            //     }
+            //     // ul.list-group 에 붙여줌
+            //     var position = $('ul.list-group');
+            //     // li.list-group-item 요소를 만들어서
+            //     $('#commentForm').val('');
+            //     var element = `<li class="list-group-item" id="comment-1">
+            //         ${input}
+            //         <span class="float-right">
+            //             <button type="button" class="btn btn-danger delete-comment" value="1">삭제</button>
+            //             <button type="button" class="btn btn-warning">수정</button>
+            //         </span>
+            //     </li>`
+            //     position.prepend(element);
+            // })
+
+            // 이벤트가 발생할 요소를 찾고
+            // $(document).on('click', '.delete-comment', function () {
+            //     // 이벤트가 발생했을 경우 실행할 이벤트 핸들러를 만든다.
+            //     // console.dir($(this));
+            //     var commentId = $(this).attr('value');
+            //     // 1. commentId로 삭제할 요소를 찾아서 지워줌
+            //     // $('#comment-' + commentId).remove();
+            //     // 2. 이벤트가 발생한 놈으로부터 부모를 찾아 지워줌
+            //     $(this).parents('.list-group-item').remove();
+            //     // console.log(commentId);
+            //     // console.dir(this.attr('value')); <- jquery 메소드 사용 불가
+            //     // console.dir(this);
+            //     // 현재 버튼을 누른 댓글이 삭제되어야 함
+
+            // })
+
+
+
+
+        })
+        // $(function() {
+
+        // })
+    </script>
+</body>
+
+</html>

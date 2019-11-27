@@ -51,3 +51,8 @@ class Comment(models.Model):
     created_date = models.DateTimeField(auto_now_add= True)
     updated_date = models.DateTimeField(auto_now= True)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
+
+
+class Board(models.Model):
+    contents = models.CharField(max_length =16)
+    created_date = models.DateTimeField(auto_now_add= True)

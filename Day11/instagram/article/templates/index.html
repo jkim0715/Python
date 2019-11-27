@@ -71,33 +71,120 @@
 
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <form action="{% url 'jae:comments' %}" method="POST">
-                        <input type="hidden" name=csrfmiddlewaretoken value="{{csrf_token}}">
-                        <input type="hidden" name="article_id" value="{{article.id}}">
+                    <form class= "commentForm" data-value="{{article.id}}">
+                        <input type="hidden" name="article_id" value="{{article.id}}" data-value="{{article.id}}" id="article_comment">
                         <div class="row">
                             <div class="col-9">
-                                <input type="text" class="form-control" name="contents">
+                                <input type="text" id="commentInput-{{article.id}}" class="form-control" name="contents">
                             </div>
                             <div class="col-3 text-center">
-                                <input type="submit" class="btn btn-primary" value="작성">
+                                <button type="submit" class="btn btn-primary" id ='submitComment'>작성</button>
                             </div>
                         </div>
                     </form>
                 </li>
+            </ul>
+            <ul class ="list-group list-group-flush" id='comment_{{article.id}}'>
                 {% for comment in article.comments %}
-                <li class="list-group-item">
-                    <i class="fas fa-comment-dots">{{comment.contents}}</i>
+             
+                <li class="list-group-item" id='comment-{{comment.id}}'>
+                    <span class="fas fa-comment-dots commentItem">{{comment.contents}}</span>
                     <span class="float-right">
-                        <a href="{% url 'jae:edit_comment' comment.id%}" class="btn btn-warning"><i
-                                class="far fa-edit"></i>수정</a>
-                        <a href="{% url 'jae:delete_comment' comment.id %}" class="btn btn-danger"><i
-                                class="far fa-trash-alt"></i>삭제</a>
+                        <button class="btn btn-warning editComment" data-id="{{comment.id}}" data-value="{{article.id}}"><i class="far fa-edit" ></i>수정</button>
+                        <button class="btn btn-danger deleteComment" data-id="{{comment.id}}" data-value="{{article.id}}"><i class="far fa-trash-alt" ></i>삭제</button>
                     </span>
                 </li>
                 {% endfor %}
-            </ul>
+
+         </ul>   
+                
         </div>
     </div>
     {%endfor%}
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    //edit 눌렀을 때
+    $(document).on('click', '.editComment',function(){
+        var comment_id = $(this).data('id');
+        var contents =$('#comment-'+comment_id+' .commentItem').text();
+        var article_id = $(this).data('value');
+        alert(article_id);
+        $('#commentInput-'+article_id).val(contents);
+        $('#submitComment').data('method','edit');
+        $('#submitComment').data('id',comment_id);
+    })
+    
+    //삭 제 !
+    $(document).on('click','.deleteComment',function(){
+        var comment_id = $(this).data('id');
+        $.ajax({
+                    url: '{% url "jae:delete_comment" %}',
+                    method: 'POST',
+                    data: {
+                        comment_id: comment_id,
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    },
+                    success: function (data) {
+                        alert('삭제성공');
+                        $('#comment-' + data.comment_id).hide();
+                    },
+                    error: function (data) {
+                        alert('삭제실패');
+                    }
+                })
+    })
+
+
+
+     $(document).on('submit', ".commentForm",function (e) {
+                event.preventDefault(); //submit 됐을 때 보통 페이지가 바뀌는데 , 이걸 넣어두면 submit을 눌러도 바로 제출되지 않음.
+                //실제 DB에 등록이 될 수 있게끔 Ajax 요청 만들어 줌 
+                var article_id = $(this).data('value');
+                var comment = $('#commentInput-'+article_id).val();
+                $('#commentInput-'+article_id).val(' ');
+                    
+                if($('#submitComment').data('method')=='edit'){
+                    var id = $('#submitComment').data('id');
+                    $.ajax({
+                        url: '{% url "jae:edit_comment" %}',
+                        method : 'POST',
+                        data : {
+                            comment_id:id,
+                            contents:comment,
+                            csrfmiddlewaretoken: "{{csrf_token}}"
+                        },
+                        success : function(data){
+                    
+                            $('#comment-'+id+' .commentItem').text(comment);
+                            $('#submitComment').removeData('method');
+                        },
+                        error: function(data){
+
+                        }
+                    })
+                }else{
+                    $.ajax({
+                    url: '{% url "jae:submit_comment" %}',
+                    method: 'POST',
+                    data: {
+                        comment: comment,
+                        article_id: article_id,
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    },
+                    success: function (data) {
+                        $('#comment_'+article_id).append(data);
+
+                    },
+                    error: function (data) {
+                        alert('실패 ');
+                    }
+                })
+                }    
+
+            })
+
+</script>
 {% endblock %}

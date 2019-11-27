@@ -111,7 +111,6 @@
         var comment_id = $(this).data('id');
         var contents =$('#comment-'+comment_id+' .commentItem').text();
         var article_id = $(this).data('value');
-        alert(article_id);
         $('#commentInput-'+article_id).val(contents);
         $('#submitComment').data('method','edit');
         $('#submitComment').data('id',comment_id);
@@ -129,7 +128,7 @@
                     },
                     success: function (data) {
                         alert('삭제성공');
-                        $('#comment-' + data.comment_id).hide();
+                        $('#comment-' + data.comment_id).remove();
                     },
                     error: function (data) {
                         alert('삭제실패');
@@ -142,6 +141,7 @@
      $(document).on('submit', ".commentForm",function (e) {
                 event.preventDefault(); //submit 됐을 때 보통 페이지가 바뀌는데 , 이걸 넣어두면 submit을 눌러도 바로 제출되지 않음.
                 //실제 DB에 등록이 될 수 있게끔 Ajax 요청 만들어 줌 
+                //console.log($(this).serialize());
                 var article_id = $(this).data('value');
                 var comment = $('#commentInput-'+article_id).val();
                 $('#commentInput-'+article_id).val(' ');
@@ -175,7 +175,7 @@
                         csrfmiddlewaretoken: '{{csrf_token}}'
                     },
                     success: function (data) {
-                        $('#comment_'+article_id).append(data);
+                        $('#comment_'+article_id).prepend(data);
 
                     },
                     error: function (data) {

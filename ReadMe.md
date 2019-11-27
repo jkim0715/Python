@@ -60,10 +60,3 @@
         - comment
 
 
-- Java Script 
-    - </body> 바로위에 모두 선언
-    - 이유는 속도
-    - 위에서부터 읽어내려오기 때문에 마지막에 넣어두는게 좋음.
-    - JS 객체는 딕셔너리 형태. but 사용하지 않을 예정.
-    - Event Listener - Event Handler(function)
-    - console.dir / console.log 로 트러블 슛

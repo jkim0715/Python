@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'article',
+    'accounts',
     'imagekit',
     'django.contrib.admin',
     'django.contrib.auth',

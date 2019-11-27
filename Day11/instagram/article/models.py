@@ -28,7 +28,7 @@ class Article(models.Model):
     # )
 
     def comments(self):
-        return Comment.objects.filter(article_id=self.id)
+        return Comment.objects.filter(article_id=self.id).order_by('created_date').reverse()
         
     def article_images(self):
         return ArticleImages.objects.filter(article_id=self.id)

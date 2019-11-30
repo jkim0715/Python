@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content%}
+
+<div class="container mt-5">
+    <div class="row">
+        <h1> 싱싱 채팅방에 오신걸 환영해요 </h1>
+        <table class="table table-striped table-dark text-center">
+            <thead>
+                <tr>
+                    <th scope="col" width="5%">#</th>
+                    <th scope="col" width="50%">채팅방</th>
+                    <th scope="col" width="25%">방장</th>
+                    <th scope="col" width="20%">참여인원</th>
+                </tr>
+            </thead>
+            <tbody class = "room-list">
+
+                {%for room in rooms %}
+                <tr onclick="location.href='/boards/{{room.id}}/';">
+                    <th scope="row">{{room.id}}</th>
+                    <td>{{room.title}}</td>
+                    <td>{{room.master}}</td>
+                    <td><span id="room-{{room.id}}-count">{{room.users.all.count}}</span>/{{room.max_connection}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+
+    </div>
+    <div class="row">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            새 채팅방 만들기
+        </button>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">채팅방 만들기</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="create-room-form">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon3">채팅방 제목</span>
+                        </div>
+                        <input name="room-title" type="text" class="form-control" id="basic-url"
+                            aria-describedby="basic-addon3">
+                    </div>
+                    <div class="input-group">
+                        <input name="room-max-count" type="number" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <button id="create-room" type="button" class="btn btn-primary" data-dismiss="modal">채팅방 생성</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+
+{%block script%}
+<script>
+    $(function () {
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('993becf0b4fc8075f35b', {
+            cluster: 'ap3',
+            forceTLS: true
+        });
+
+        var channel = pusher.subscribe('main');
+        channel.bind('create-room', function (data) {
+            console.log(JSON.stringify(data));
+            var room =`
+                <tr onclick="location.href='/boards/${data.id}/';">
+                    <th scope="row">${data.id}</th>
+                    <td>${data.title}</td>
+                    <td>${data.master}</td>
+                    <td><span id="room-${data.id}-count">${data.current_connection}</span>/${data.max_connection}</td>
+                </tr>
+                `
+                $('.room-list').append(room);
+        });
+        channel.bind('update-room', function(data) {
+            $(`#room-${data.room_id}-count`).text(data.current_connection);
+        })
+
+
+        // 버튼 반응
+        $('#create-room').on('click', function () {
+            console.log('채팅방 생성');
+            // room에 대한 정보를 변수를 저장해서 
+            // 서버로 room 생성을 요청을
+            // 정상 응답인지만 체크
+            var room_data = $('#create-room-form').serialize();
+            console.log(room_data)
+
+            $.ajax({
+                url: '{% url "boards:index" %}',
+                method: 'POST',
+                data: room_data,
+                success: function (data) {
+                    console.log('생성')
+                },
+                error: function (data) {
+
+                },
+            })
+        })
+
+
+
+    })
+</script>
+{%endblock%}

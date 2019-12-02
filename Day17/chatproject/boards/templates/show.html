@@ -34,7 +34,7 @@
     $(function () {
         Pusher.logToConsole = false;
         $('.chat-messages').scrollTop($('.chat-messages')[0].scrollHeight);
-        var pusher = new Pusher('993becf0b4fc8075f35b', {
+        var pusher = new Pusher('appkey', {
             cluster: 'ap3',
             forceTLS: true
         });

@@ -8,11 +8,11 @@ import pusher
 
 pusher_client = pusher.Pusher(
 
-  app_id='908835',
+  app_id='app_id',
 
-  key='993becf0b4fc8075f35b',
+  key='app key',
 
-  secret='327f36252b2ffc48edff',
+  secret='secret',
 
   cluster='ap3',
 

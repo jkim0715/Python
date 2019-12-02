@@ -6,7 +6,19 @@ import json
 import pusher
 
 
+pusher_client = pusher.Pusher(
 
+  app_id='908835',
+
+  key='993becf0b4fc8075f35b',
+
+  secret='327f36252b2ffc48edff',
+
+  cluster='ap3',
+
+  ssl=True
+
+)
 
 
 # Create your views here.
@@ -92,7 +104,7 @@ def exit(request, room_id):
         }
     pusher_client.trigger(room.code, 'chat', json.dumps(join_message))
     context = {
-        'room_id': room_id,``
+        'room_id': room_id,
         'current_connection': len(room.users.all())
     }
     pusher_client.trigger('main', 'update-room', json.dumps(context))

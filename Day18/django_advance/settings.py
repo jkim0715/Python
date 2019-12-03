@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap4',
     'django_extensions',
     'board',
     'django.contrib.admin',
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'django_advance.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], #defaults : INSTALLED_APPS 안의 templates는 기본으로 찾아보게 된다.
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

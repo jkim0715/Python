@@ -1,4 +1,5 @@
 from django.db import models
+
 from faker import Faker
 f = Faker()
 # Create your models here.
@@ -8,8 +9,10 @@ class Article(models.Model):
     keyword = models.CharField(max_length=50)
     email = models.CharField(max_length=200)
     content = models.TextField()
+    date = models.DateField(blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now= True)
+    updated_at = models.DateTimeField(auto_now= True, null=True)
 
     @classmethod
     def dummy(cls, n):
